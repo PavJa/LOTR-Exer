@@ -108,20 +108,21 @@ class ColoursFrame(wx.Frame):
         |wx.SYSTEM_MENU|wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
 
         self.panel = ColoursPanel(self)
-        icon = wx.Icon("C://Users//pavel//PycharmProjects//pythonv10_2Colours//Cwheel.ico", wx.BITMAP_TYPE_ICO)
-        self.SetIcon(icon)
+        #icon = wx.Icon("C://Users//pavel//PycharmProjects//pythonv10_2Colours//Cwheel.ico", wx.BITMAP_TYPE_ICO)
+        #self.SetIcon(icon)
 
+# there are some icons that I ddeleted in this demo
 
 class ColoursPanel(wx.Panel):
     def __init__(self, parent):
         super(ColoursPanel, self).__init__(parent)
 
-        bmp_del = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//bin.png")
-        bmp_exp = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//export.png")
-        bmp_con = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//convert.png")
-        bmp_find = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//search.png")
-        bmp_sall = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//selectall.png")
-        bmp_comp = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//iwheel.png")
+        #bmp_del = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//bin.png")
+        #bmp_exp = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//export.png")
+        #bmp_con = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//convert.png")
+        #bmp_find = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//search.png")
+        #bmp_sall = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//selectall.png")
+        #bmp_comp = wx.Bitmap("C://Users//pavel//PycharmProjects//pythonv10_2Colours//iwheel.png")
 
         self.tipRGB = wx.ToolTip("Use commas to separate three numbers between 0 and 255.")
         self.tipCMYK = wx.ToolTip("Use commas to separate four numbers between 0 and 100.")
@@ -156,11 +157,11 @@ class ColoursPanel(wx.Panel):
         self.nameLabelGraph = wx.StaticText(self, label="Compare Results Graphically:")
 
         self.my_btn = wx.Button(self, label='Find Closest Colour(s)')
-        self.my_btn.SetBitmap(bmp_find)
+        #self.my_btn.SetBitmap(bmp_find)
         self.my_btn.Bind(wx.EVT_BUTTON, self.on_press)
 
         self.my_btn_convert = wx.Button(self, label='Convert Input Colour')
-        self.my_btn_convert.SetBitmap(bmp_con)
+        #self.my_btn_convert.SetBitmap(bmp_con)
         self.my_btn_convert.Bind(wx.EVT_BUTTON, self.on_press_convert)
 
         self.compare_colour_picture = wx.CheckBox(self, label='One Palette')
@@ -196,7 +197,7 @@ class ColoursPanel(wx.Panel):
         self.list_ctrl.InsertColumn(5, 'Catalogue Number', width=120)
 
         self.my_btn_compsel = wx.Button(self, label='Compare Selected Items')
-        self.my_btn_compsel.SetBitmap(bmp_comp)
+        #self.my_btn_compsel.SetBitmap(bmp_comp)
         self.my_btn_compsel.Bind(wx.EVT_BUTTON, self.on_press_compsel)
 
         #self.btn = wx.Button(self, id=1, label="Delete All Results")
@@ -208,15 +209,15 @@ class ColoursPanel(wx.Panel):
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_UNCHECKED, self.onItemUnChecked)
 
         self.btn_delItem = wx.Button(self, id=1, label="Delete Selected Item(s)")
-        self.btn_delItem.SetBitmap(bmp_del)
+        #self.btn_delItem.SetBitmap(bmp_del)
         self.btn_delItem.Bind(wx.EVT_BUTTON, self.on_press_delItem)
 
         self.btn_export = wx.Button(self, label='Export Selected Data')
-        self.btn_export.SetBitmap(bmp_exp)
+        #self.btn_export.SetBitmap(bmp_exp)
         self.btn_export.Bind(wx.EVT_BUTTON, self.on_press_export)
 
         self.selectall_btn = wx.Button(self, label='(De)Select All')
-        self.selectall_btn.SetBitmap(bmp_sall)
+        #self.selectall_btn.SetBitmap(bmp_sall)
         self.selectall_btn.Bind(wx.EVT_BUTTON, self.on_press_selectall)
 
         # set font
