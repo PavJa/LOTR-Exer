@@ -1,14 +1,8 @@
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import seaborn as sns # creating the heatmap
-import matplotlib.pyplot as plt # data visualization
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import roc_curve
-from sklearn.metrics import classification_report
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import time
+
 start_time = time.time()
 
 data_Books = 'BX-Books.csv'
@@ -53,78 +47,27 @@ df_BooksUsersRate['Age'] = df_BooksUsersRate['Age'].fillna(0)
 df_BooksUsersRate['Book-Author'] = df_BooksUsersRate['Book-Author'].fillna('Missing')
 df_BooksUsersRate['Publisher'] = df_BooksUsersRate['Publisher'].fillna('Missing')
 df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].fillna('Missing')
+
+
+
 #print(df_BooksUsersRate.isnull().values.any()) # just checking we have no NaN values
 
-
-# Below are the quick examples
-
-# Example 1: convert lowercase column using str.lower()
+# convert lowercase column using str.lower()
 df_BooksUsersRate['Book-Title']= df_BooksUsersRate['Book-Title'].str.lower()
 #df_BooksUsersRate['Book-Title']= df_BooksUsersRate['Book-Title'].str.replace(' ','')
-
 
 df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].str.replace(r"\(.*\)",'')
 df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].str.replace(r",",'')
 df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].str.replace(r":",'')
-
-
-#print(df_BooksUsersRate['Book-Title'].to_string())
-
-# create basic categories
-
-
+df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].str.strip()
 
 Author = df_BooksUsersRate['Book-Author']
-Title = df_BooksUsersRate['Book-Title'].astype('str')
-Location = df_BooksUsersRate['Location']
-Rating = df_BooksUsersRate['Book-Rating'].astype('int')
-User_ID = df_BooksUsersRate['User-ID']
-#print(Author)
-
-
-
-# key word search
-#Tolkien_list = [y for x,y,z in zip(Author,Title,Location) if (x == 'J. R. R. Tolkien' and ('usa' or 'united kingdom' or
-                                                                #                           'canada' or 'australia' or
-                                                               #                            'new zealand') in z and
-                                                              #('lord of the rings' or 'two towers' or
-                                                             #  'the return of the king' or 'the fellowship of the ring')
-                                                             # not in y)]
-#new_Tolkien_list = list(set(Tolkien_list)) #remove duplicates by changing list to a set and back
-#new_Tolkien_list.remove('Farmer Giles of Ham: Aegidii Ahenobarbi Julii Agricole De Hammo Domini De Domito Aule '
-                        #'Draconarie Comitis Regni Minimi Regis Et Basilei Mira Facinora')
-#print(new_Tolkien_list)
-
-# problems:  Tolkien wrote other things than Lord of The Rings, so this recommendation is flawed since it can recommend
-# something the reader will not like
-
-# similar rating - far streched assumption that this is our reference class (we know nothing about our stakeholder). For
-#z>7 it was fairly small. Plus what does enjoy mean numerically?
-
-Tolkien_list_rating = [x for x,y,z in zip(User_ID,Title,Rating) if ('the lord of the rings' in y and z>=8)]
-
+#Title = df_BooksUsersRate['Book-Title'].astype('str')
+df_BooksUsersRate['Book-Title'] = df_BooksUsersRate['Book-Title'].astype('str')
+#Location = df_BooksUsersRate['Location']
 df_BooksUsersRate['Book-Rating'] = df_BooksUsersRate['Book-Rating'].astype('int')
+#User_ID = df_BooksUsersRate['User-ID']
 
-print(len(Tolkien_list_rating))
-
-
-list_Similar_Rate = []
-
-for x in Tolkien_list_rating:
-    k = df_BooksUsersRate.loc[(df_BooksUsersRate['User-ID'] == x) & (df_BooksUsersRate['Book-Rating'] >= 7)]
-    k_rate_book = k[['Book-Title', 'Book-Rating', 'Age']]
-    list_Similar_Rate.append(k_rate_book)
-
-df_union = pd.concat(list_Similar_Rate)
-
-df_union['Book-Title'] = df_union['Book-Title'].str.strip()
-#df_union['Book-Title'] = df_union.style.set_properties(**{'Book-Title-align': 'right'})
-
-
-#df_union_grouped_count = df_union.groupby(['Book-Title'],sort=False)['Book-Title'].count().
-# sort_values(ascending=False).reset_index(name="Count")
-
-#
 df_union['Age'] = df_union['Age'].astype('int')
 df_union['Book-Title'] = df_union['Book-Title'].str.\
     replace('the hobbit  the enchanting prelude to the lord of the rings', 'the hobbit') # post result adjustemnt
@@ -136,12 +79,63 @@ df_union['Book-Title'] = df_union['Book-Title'].str.\
     replace('the two towers', 'the lord of the rings')
 
 
+
+#print(df_BooksUsersRate['Book-Title'].to_string())
+
+# create basic categories
+
+
+#print(Author)
+
+# similar rating - far streched assumption that this is our reference class (we know nothing about our stakeholder). For
+#z>7 it was fairly small. Plus what does enjoy mean numerically?
+
+# Create a list of people (user-ID) that have read the lord of the rings
+
+
+
+Tolkien_list_rating = [x for x,y,z in zip(df_BooksUsersRate['User-ID'],df_BooksUsersRate['Book-Title'],
+                                          df_BooksUsersRate['Book-Rating']) if ('the lord of the rings' in y and z>=7)]
+
+#print(len(Tolkien_list_rating))
+
+count_check = []
+for i in df_BooksUsersRate['Book-Title']:
+    if 'the lord of the rings' in i:
+        count_check.append(i)
+
+print(len(count_check))
+
+df_BooksUsersRate['Book-Rating'] = df_BooksUsersRate['Book-Rating'].astype('int')
+
+
+
+list_Similar_Rate = []
+
+for x in Tolkien_list_rating:
+    k = df_BooksUsersRate.loc[(df_BooksUsersRate['User-ID'] == x) & (df_BooksUsersRate['Book-Rating'] >= 7)]
+    k_rate_book = k[['Book-Title', 'Book-Rating', 'Age']]
+    list_Similar_Rate.append(k_rate_book)
+
+df_union = pd.concat(list_Similar_Rate)
+
+
+
+#df_union['Age'] = df_union['Age'].astype('int')
+#df_union['Book-Title'] = df_union['Book-Title'].str.\
+#   replace('the hobbit  the enchanting prelude to the lord of the rings', 'the hobbit') # post result adjustemnt
+#df_union['Book-Title'] = df_union['Book-Title'].str.\
+#    replace('the return of the king', 'the lord of the rings')
+#df_union['Book-Title'] = df_union['Book-Title'].str.\
+#    replace('the fellowship of the ring', 'the lord of the rings')
+#df_union['Book-Title'] = df_union['Book-Title'].str.\
+#    replace('the two towers', 'the lord of the rings')
+
+
 df_union_grouped_count = df_union.groupby(['Book-Title'],sort=False).agg(Count=('Book-Title', 'count'),
                                                                          Mean_Rating=('Book-Rating', 'mean'),
                                                                          Median_Age=('Age', 'median'))\
     .sort_values(by=['Count','Mean_Rating'],ascending=[False,False]).reset_index()
-
-
 
 df_union_grouped_count = df_union_grouped_count[df_union_grouped_count['Count'] >= 20]
 df_union_grouped_count.Mean_Rating=df_union_grouped_count.Mean_Rating.round(2)
@@ -152,7 +146,17 @@ df_union_grouped_count = df_union_grouped_count.iloc[1:]
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-print(df_union_grouped_count.to_string())
+sns.set_theme(style="whitegrid")
+plt.figure()
+sns.countplot(x=df_BooksUsersRate['Book-Rating'])
 
-#print(df_union_grouped_mean)
+
+plt.figure()
+sns.histplot(x=df_BooksUsersRate['Age'],binrange=(10,80))
+
+
+
+print(df_union_grouped_count.to_string())
+print("--- %s seconds ---" % (time.time() - start_time))
+plt.show()
 
